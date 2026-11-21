@@ -162,7 +162,10 @@ export function ProgressChart({ entries }: { entries: Entry[] }) {
   );
 }
 
-export function RestTimer({ defaultSeconds, onDefaultChange }: { defaultSeconds: number; onDefaultChange: (s: number) => void }) {
+const REST_SECONDS = 90;
+
+/** timer de descanso fijo de 90 s (no se registra en ningún lado) */
+export function RestTimer() {
   const [endAt, setEndAt] = useState<number | null>(null);
   const [now, setNow] = useState(Date.now());
   const fired = useRef(false);
@@ -188,11 +191,10 @@ export function RestTimer({ defaultSeconds, onDefaultChange }: { defaultSeconds:
       }
     }
   }, [left, endAt]);
-  const start = (s: number) => {
+  const start = () => {
     fired.current = false;
     setNow(Date.now());
-    setEndAt(Date.now() + s * 1000);
-    onDefaultChange(s);
+    setEndAt(Date.now() + REST_SECONDS * 1000);
   };
   const mm = `${Math.floor(left / 60)}:${String(left % 60).padStart(2, '0')}`;
   return (
@@ -200,18 +202,11 @@ export function RestTimer({ defaultSeconds, onDefaultChange }: { defaultSeconds:
       {endAt ? (
         <>
           <span className="timer-time">{left === 0 ? '¡Dale!' : mm}</span>
-          <button type="button" onClick={() => start(defaultSeconds)}>Reiniciar</button>
-          <button type="button" onClick={() => setEndAt(null)}>✕</button>
+          <button type="button" onClick={start}>Reiniciar</button>
+          <button type="button" onClick={() => setEndAt(null)} aria-label="Cerrar timer">✕</button>
         </>
       ) : (
-        <>
-          <span className="timer-label">Descanso</span>
-          {[60, 90, 120, 180].map((s) => (
-            <button type="button" key={s} className={s === defaultSeconds ? 'pref' : ''} onClick={() => start(s)}>
-              {s < 120 ? `${s}s` : `${s / 60}m`}
-            </button>
-          ))}
-        </>
+        <button type="button" className="timer-start" onClick={start}>⏱ Descanso 90s</button>
       )}
     </div>
   );

@@ -14,7 +14,7 @@ Los rangos y el salto de peso se pueden ajustar por ejercicio.
 - **Para hoy**: al abrir un ejercicio ves la sugerencia, el **foco** técnico fijo del ejercicio y un resumen de las notas de las 2 últimas sesiones (lo que anotaste "para la próxima" y las notas que dicen qué hacer después).
 - **Registro**: series con steppers de peso y repes, botón **MVC** (al fallo), nota por serie, notas finales y **📌 Para la próxima vez**. Se guarda solo, a medida que cargás.
 - **Modo texto**: podés escribir como siempre (`50x10 MVC segunda 50x9 (nota) ultima 50x6 MVC`) y la app lo interpreta.
-- **Timer de descanso** con vibración.
+- **Timer de descanso** fijo de 90 s, con vibración al terminar.
 - **Dolor lumbar (0–10)** por día con su gráfico, y una checklist de **movilidad y hábitos**.
 - **Progreso**: gráfico de 1RM estimado y de peso tope, y el historial completo, que se puede editar.
 - **Backup**: exportar e importar en JSON, y exportar todo como texto en tu formato.

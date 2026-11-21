@@ -379,6 +379,5 @@ export function buildSeed(): AppState {
     entries,
     habits: HABITS,
     daily: {},
-    restSeconds: 120,
   };
 }

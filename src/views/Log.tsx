@@ -8,7 +8,7 @@ import { EntryView, RestTimer, SetChips, Stepper, SuggestionBox, TypeBadge, entr
 import { navigate } from '../App';
 
 export default function Log({ store, exId, entryId, dayId }: { store: Store; exId: string; entryId?: string; dayId?: string }) {
-  const { state, upsertEntry, deleteEntry, update } = store;
+  const { state, upsertEntry, deleteEntry } = store;
   const ex = state.exercises.find((e) => e.id === exId);
   const today = todayISO();
   const list = useMemo(() => entriesFor(state.entries, exId), [state.entries, exId]);
@@ -220,7 +220,7 @@ export default function Log({ store, exId, entryId, dayId }: { store: Store; exI
         {isSaved && <button className="btn danger" onClick={remove}>Borrar</button>}
       </div>
 
-      <RestTimer defaultSeconds={state.restSeconds} onDefaultChange={(sec) => update((st) => ({ ...st, restSeconds: sec }))} />
+      <RestTimer />
     </div>
   );
 }

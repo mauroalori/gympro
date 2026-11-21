@@ -223,6 +223,7 @@ details.card > .entry { margin-top: 10px; }
 }
 .timer button { padding: 7px 10px; border-radius: 9px; background: var(--surface-2); font-weight: 650; font-size: 14px; }
 .timer button.pref { outline: 1px solid var(--accent); }
+.timer .timer-start { flex: 1; padding: 10px; font-size: 15px; }
 .timer-label { flex: 1; font-size: 13px; color: var(--muted); font-weight: 600; }
 .timer-time { flex: 1; font-size: 26px; font-weight: 800; font-variant-numeric: tabular-nums; }
 .timer.running { border-color: var(--keep); }

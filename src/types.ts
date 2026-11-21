@@ -80,5 +80,4 @@ export interface AppState {
   entries: Entry[];
   habits: Habit[];
   daily: Record<string, DailyLog>;
-  restSeconds: number;
 }
