@@ -15,6 +15,7 @@ Los rangos y el salto de peso se pueden ajustar por ejercicio.
 - **Entrenar**: sugiere el día que toca según la rotación (Espalda → Pecho → Core → Piernas → Brazos). En cada ejercicio muestra la sugerencia de peso × repes y **solo las 2 últimas veces** que lo hiciste.
 - **Para hoy**: al abrir un ejercicio ves la sugerencia, el **foco** técnico fijo del ejercicio y un resumen de las notas de las 2 últimas sesiones (lo que anotaste "para la próxima" y las notas que dicen qué hacer después).
 - **Registro**: series con steppers de peso y repes, botón **MVC** (al fallo), nota por serie, notas finales y **📌 Para la próxima vez**. Se guarda solo, a medida que cargás.
+- **✨ Consejo IA (opcional, gratis)**: botón en cada ejercicio que le pregunta a Gemini qué carga hacer hoy, con tus últimas sesiones, notas, foco y dolor lumbar. Necesita una API key gratis de [Google AI Studio](https://aistudio.google.com/apikey), que se pega en Ajustes y queda solo en el teléfono (no va en el backup). La regla automática sigue siendo la base; la IA es una segunda opinión.
 - **Modo texto**: podés escribir como siempre (`50x10 MVC segunda 50x9 (nota) ultima 50x6 MVC`) y la app lo interpreta.
 - **Timer de descanso** fijo de 90 s, con vibración al terminar.
 - **Dolor lumbar (0–10)** por día con su gráfico, y una checklist de **movilidad y hábitos**.
