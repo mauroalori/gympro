@@ -5,6 +5,8 @@ App mobile (PWA) para registrar la rutina de gym día a día con **doble progres
 - **Aislamiento**: 6–15 repes. Cuando llegás a 15, la app te sugiere subir el peso y volver a 6.
 - **Compuesto**: 8–12 repes. Cuando llegás a 12, te sugiere subir el peso y volver a 8.
 
+Para subir de peso tienen que llegar al tope **al menos 2 series** con el peso más alto (o la única serie, si hiciste una sola con ese peso). Si la nota de la última vez dice mantener ("mantener", "seguir con este peso", "no subir"…), la sugerencia respeta la nota.
+
 Los rangos y el salto de peso se pueden ajustar por ejercicio.
 
 ## Qué hace
