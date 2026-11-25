@@ -6,6 +6,7 @@ import { entriesFor, hintsFor, lastValid, suggest, topSet } from '../progression
 import { formatEntry, parseLine } from '../parser';
 import { EntryView, RestTimer, SetChips, Stepper, SuggestionBox, TypeBadge, entryLabel } from '../components';
 import { navigate } from '../App';
+import { askGemini, buildPrompt, loadAI, type AIAdvice } from '../ai';
 
 export default function Log({ store, exId, entryId, dayId }: { store: Store; exId: string; entryId?: string; dayId?: string }) {
   const { state, upsertEntry, deleteEntry } = store;
@@ -102,6 +103,9 @@ export default function Log({ store, exId, entryId, dayId }: { store: Store; exI
             <span className="cue-label">Foco</span> {ex.cue}
           </div>
         )}
+        <AIPanel
+          getPrompt={() => buildPrompt(state, ex, list, list.find((e) => e.id === draft.id), s)}
+        />
         {hints.length > 0 && (
           <ul className="hints">
             {hints.map((h, i) => (
@@ -221,6 +225,48 @@ export default function Log({ store, exId, entryId, dayId }: { store: Store; exI
       </div>
 
       <RestTimer />
+    </div>
+  );
+}
+
+function AIPanel({ getPrompt }: { getPrompt: () => string }) {
+  const [busy, setBusy] = useState(false);
+  const [advice, setAdvice] = useState<AIAdvice | null>(null);
+  const [error, setError] = useState('');
+  const cfg = loadAI();
+
+  const ask = async () => {
+    if (!cfg.apiKey) {
+      navigate('/settings');
+      return;
+    }
+    setBusy(true);
+    setError('');
+    try {
+      setAdvice(await askGemini(cfg, getPrompt()));
+    } catch (e) {
+      setError((e as Error).message);
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <div className="ai">
+      {advice && (
+        <div className={`sug ia ${advice.decision}`}>
+          <span className="sug-icon">✨</span>
+          <div>
+            <div className="sug-title">{advice.objetivo}</div>
+            <div className="sug-detail">{advice.razon}</div>
+            {advice.alerta && <div className="ai-alert">⚠ {advice.alerta}</div>}
+          </div>
+        </div>
+      )}
+      {error && <div className="ai-error">{error}</div>}
+      <button className="btn ai-btn" onClick={ask} disabled={busy}>
+        {busy ? 'Pensando…' : !cfg.apiKey ? '✨ Activar Consejo IA (gratis)' : advice ? '✨ Preguntar de nuevo' : '✨ Consejo IA'}
+      </button>
     </div>
   );
 }

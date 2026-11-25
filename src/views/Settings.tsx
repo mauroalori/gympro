@@ -7,6 +7,7 @@ import { formatEntry } from '../parser';
 import { byChrono } from '../progression';
 import ExerciseForm from './ExerciseForm';
 import ExercisePicker from './ExercisePicker';
+import { DEFAULT_MODEL, loadAI, saveAI } from '../ai';
 
 function download(name: string, content: string, type: string) {
   const a = document.createElement('a');
@@ -211,6 +212,8 @@ export default function Settings({ store }: { store: Store }) {
         </button>
       </section>
 
+      <AISettings />
+
       <section className="card">
         <div className="card-title"><span>Datos y backup</span></div>
         <p className="muted small">Los datos se guardan en este dispositivo. Exportá un backup de vez en cuando.</p>
@@ -248,5 +251,56 @@ export default function Settings({ store }: { store: Store }) {
         />
       )}
     </div>
+  );
+}
+
+function AISettings() {
+  const [cfg, setCfg] = useState(loadAI);
+  const [show, setShow] = useState(false);
+  const set = (p: Partial<typeof cfg>) => {
+    const n = { ...cfg, ...p };
+    setCfg(n);
+    saveAI(n);
+  };
+  return (
+    <section className="card" id="ia">
+      <div className="card-title">
+        <span>Consejo IA (Gemini)</span>
+        <span className={`badge ${cfg.apiKey ? 'aislamiento' : ''}`}>{cfg.apiKey ? 'activo' : 'inactivo'}</span>
+      </div>
+      <ol className="steps small">
+        <li>
+          Entrá a{' '}
+          <a href="https://aistudio.google.com/apikey" target="_blank" rel="noreferrer">
+            aistudio.google.com/apikey
+          </a>{' '}
+          con tu cuenta de Google.
+        </li>
+        <li>Tocá “Create API key” y copiala. Es gratis, no pide tarjeta.</li>
+        <li>Pegala acá abajo.</li>
+      </ol>
+      <label className="field">
+        <span>API key</span>
+        <div className="row gap">
+          <input
+            className="grow"
+            type={show ? 'text' : 'password'}
+            autoComplete="off"
+            placeholder="AIza…"
+            value={cfg.apiKey}
+            onChange={(e) => set({ apiKey: e.target.value.trim() })}
+          />
+          <button type="button" className="mini" onClick={() => setShow((v) => !v)} aria-label="Mostrar clave">{show ? '🙈' : '👁'}</button>
+        </div>
+      </label>
+      <label className="field">
+        <span>Modelo</span>
+        <input value={cfg.model} placeholder={DEFAULT_MODEL} onChange={(e) => set({ model: e.target.value.trim() || DEFAULT_MODEL })} />
+      </label>
+      <p className="muted small">
+        La clave queda guardada solo en este teléfono y no viaja en el backup. Cada consulta manda a Google las últimas sesiones de ese ejercicio, tus notas y el
+        dolor lumbar. En el plan gratis Google puede usar esos datos para mejorar sus modelos.
+      </p>
+    </section>
   );
 }
