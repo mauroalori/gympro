@@ -68,11 +68,33 @@ describe('progresión sobre el historial', () => {
   it('prensa 120x11 -> 120x12', () => {
     expect(sug('prensa')).toMatchObject({ kind: 'mantener', weight: 120, reps: 12 });
   });
-  it('dorsales usa la última variante con peso', () => {
-    expect(sug('dorsales')).toMatchObject({ kind: 'subir', weight: 45, reps: 8 });
+  it('dorsales: una sola serie en el tope no alcanza para subir', () => {
+    expect(sug('dorsales')).toMatchObject({ kind: 'mantener', weight: 40, reps: 12 });
   });
-  it('dorsales usa la última variante con peso', () => {
-    expect(sug('dorsales')).toMatchObject({ kind: 'subir', weight: 45, reps: 8 });
+  it('tríceps con barra: 1 de 4 series en 15 -> mantener 30x15', () => {
+    expect(sug('triceps-en-polea-con-barra')).toMatchObject({ kind: 'mantener', weight: 30, reps: 15 });
+  });
+  it('hip thrust: la nota "seguir con este peso" gana', () => {
+    const r = sug('hip-thrust');
+    expect(r).toMatchObject({ kind: 'mantener', weight: 50 });
+    expect(r.detail).toContain('Tu nota');
+  });
+  it('bíceps con barra: 25x15 y 25x14 -> mantener (solo 1 en 15)', () => {
+    expect(sug('biceps-en-polea-con-barra')).toMatchObject({ kind: 'mantener', weight: 25 });
+  });
+  it('dorsales: una sola serie en el tope no alcanza para subir', () => {
+    expect(sug('dorsales')).toMatchObject({ kind: 'mantener', weight: 40, reps: 12 });
+  });
+  it('tríceps con barra: 1 de 4 series en 15 -> mantener 30x15', () => {
+    expect(sug('triceps-en-polea-con-barra')).toMatchObject({ kind: 'mantener', weight: 30, reps: 15 });
+  });
+  it('hip thrust: la nota "seguir con este peso" gana', () => {
+    const r = sug('hip-thrust');
+    expect(r).toMatchObject({ kind: 'mantener', weight: 50 });
+    expect(r.detail).toContain('Tu nota');
+  });
+  it('bíceps con barra: 25x15 y 25x14 -> mantener (solo 1 en 15)', () => {
+    expect(sug('biceps-en-polea-con-barra')).toMatchObject({ kind: 'mantener', weight: 25 });
   });
   it('dominadas es un ejercicio aparte (peso corporal)', () => {
     const dom = s.entries.filter((e) => e.exerciseId === 'dominadas');

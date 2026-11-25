@@ -55,6 +55,13 @@ export function lastValid(list: Entry[], opts: { variant?: string | null; exclud
   return undefined;
 }
 
+/** notas de un registro que indican quedarse con el peso actual */
+const HOLD_RX = /manten|no subir|seguir con este peso|con este peso|quedar(me)? en|hasta que|bajar (el )?peso/i;
+
+function lastNotes(e: Entry): string[] {
+  return [e.nextNote, e.note, ...e.sets.map((x) => x.note)].filter((n): n is string => !!n?.trim());
+}
+
 const roundTo = (n: number, step: number) => Math.round(n / step) * step;
 
 /**
@@ -93,13 +100,32 @@ export function suggest(ex: Exercise, list: Entry[], excludeId?: string): Sugges
 
   const w = top.weight;
   if (reps >= repMax) {
-    const next = roundTo(w + ex.increment, 0.25);
+    // doble progresión: no alcanza con una sola serie en el tope
+    const atTop = last.sets.filter((x) => isValidSet(x) && (x.weight ?? 0) === w);
+    const hits = atTop.filter((x) => x.reps! >= repMax).length;
+    const needed = Math.min(2, atTop.length);
+    const holdNote = lastNotes(last).find((n) => HOLD_RX.test(n));
+    if (hits >= needed && !holdNote) {
+      const next = roundTo(w + ex.increment, 0.25);
+      return {
+        kind: 'subir',
+        title: `Subí a ${fmtNum(next)} kg × ${repMin}`,
+        detail:
+          atTop.length > 1
+            ? `${hits} de ${atTop.length} series con ${fmtNum(w)} kg llegaron a ${repMax}.`
+            : `Hiciste ${fmtNum(w)}×${reps}: llegaste al tope del rango (${repMax}).`,
+        weight: next,
+        reps: repMin,
+      };
+    }
     return {
-      kind: 'subir',
-      title: `Subí a ${fmtNum(next)} kg × ${repMin}`,
-      detail: `Hiciste ${fmtNum(w)}×${reps}: llegaste al tope del rango (${repMax}).`,
-      weight: next,
-      reps: repMin,
+      kind: 'mantener',
+      title: `${fmtNum(w)} kg × ${repMax}`,
+      detail: holdNote
+        ? `Tu nota dice: “${holdNote}”.`
+        : `Solo ${hits} de ${atTop.length} series ${hits === 1 ? 'llegó' : 'llegaron'} a ${repMax}. Llevá al menos 2 al tope antes de subir.`,
+      weight: w,
+      reps: repMax,
     };
   }
   if (reps < repMin) {
